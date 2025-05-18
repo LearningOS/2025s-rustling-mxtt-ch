@@ -2,7 +2,7 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
+
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -38,6 +38,70 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+        // 添加元素到堆的末尾
+        self.items.push(value);
+        self.count += 1;
+        
+        // 上浮操作，维护堆的性质
+        let mut idx = self.count;
+        while idx > 1 {
+            let parent_idx = self.parent_idx(idx);
+            
+            // 如果当前元素满足堆的比较条件，则交换
+            if (self.comparator)(&self.items[idx], &self.items[parent_idx]) {
+                self.items.swap(idx, parent_idx);
+                idx = parent_idx;
+            } else {
+                break;
+            }
+        }
+    }
+
+    fn smallest_child_idx(&self, idx: usize) -> usize {
+        //TODO
+        let left_idx = self.left_child_idx(idx);
+        let right_idx = self.right_child_idx(idx);
+        
+        // 如果右子节点存在且满足比较条件，返回右子节点索引
+        if right_idx <= self.count && (self.comparator)(&self.items[right_idx], &self.items[left_idx]) {
+            right_idx
+        } else {
+            left_idx
+        }
+    }
+
+    fn next(&mut self) -> Option<T> {
+        //TODO
+        if self.is_empty() {
+            return None;
+        }
+        
+        // 交换根节点和最后一个节点
+        self.items.swap(1, self.count);
+        
+        // 移除并获取最后一个节点（原根节点）
+        let result = self.items.pop();
+        self.count -= 1;
+        
+        // 如果堆不为空，执行下沉操作
+        if !self.is_empty() {
+            let mut idx = 1;
+            
+            // 当前节点有子节点时，继续下沉
+            while self.children_present(idx) {
+                let child_idx = self.smallest_child_idx(idx);
+                
+                // 如果子节点满足比较条件，则交换
+                if (self.comparator)(&self.items[child_idx], &self.items[idx]) {
+                    self.items.swap(idx, child_idx);
+                    idx = child_idx;
+                } else {
+                    break;
+                }
+            }
+        }
+        
+        result
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -56,10 +120,6 @@ where
         self.left_child_idx(idx) + 1
     }
 
-    fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
-    }
 }
 
 impl<T> Heap<T>

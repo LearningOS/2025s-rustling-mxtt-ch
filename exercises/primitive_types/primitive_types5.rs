@@ -8,7 +8,7 @@
 
 fn main() {
     let cat = ("Furry McFurson", 3.5);
-    let /* your pattern here */(name, age) = cat;
+    let (name, age) = cat; // 解构元组，将第一个元素赋值给name，第二个元素赋值给age
 
     println!("{} is {} years old.", name, age);
 }

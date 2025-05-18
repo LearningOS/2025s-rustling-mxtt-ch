@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +69,50 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+    pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T: Ord + Clone  // 添加Clone特性约束
+    {
+        //TODO
+        let mut result = Self::new();
+        
+        // 获取两个链表的起始节点
+        let mut current_a = list_a.start;
+        let mut current_b = list_b.start;
+        
+        // 当两个链表都有节点时，比较并添加较小的节点
+        while current_a.is_some() && current_b.is_some() {
+            let a_val = unsafe { &(*current_a.unwrap().as_ptr()).val };
+            let b_val = unsafe { &(*current_b.unwrap().as_ptr()).val };
+            
+            if a_val <= b_val {
+                // 添加A的节点并移动A的指针
+                let node_val = unsafe { &(*current_a.unwrap().as_ptr()).val };
+                result.add(node_val.clone());
+                current_a = unsafe { (*current_a.unwrap().as_ptr()).next };
+            } else {
+                // 添加B的节点并移动B的指针
+                let node_val = unsafe { &(*current_b.unwrap().as_ptr()).val };
+                result.add(node_val.clone());
+                current_b = unsafe { (*current_b.unwrap().as_ptr()).next };
+            }
         }
-	}
+        
+        // 处理剩余的A链表节点
+        while current_a.is_some() {
+            let node_val = unsafe { &(*current_a.unwrap().as_ptr()).val };
+            result.add(node_val.clone());
+            current_a = unsafe { (*current_a.unwrap().as_ptr()).next };
+        }
+        
+        // 处理剩余的B链表节点
+        while current_b.is_some() {
+            let node_val = unsafe { &(*current_b.unwrap().as_ptr()).val };
+            result.add(node_val.clone());
+            current_b = unsafe { (*current_b.unwrap().as_ptr()).next };
+        }
+        
+        result
+    }
 }
 
 impl<T> Display for LinkedList<T>

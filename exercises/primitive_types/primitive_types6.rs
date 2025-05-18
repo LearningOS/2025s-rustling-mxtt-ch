@@ -10,8 +10,8 @@
 #[test]
 fn indexing_tuple() {
     let numbers = (1, 2, 3);
-    // Replace below ??? with the tuple indexing syntax.
-    let second = numbers.1;
+    // 使用元组索引语法替换下面的 ???
+    let second = numbers.1; // 在Rust中，元组索引从0开始，所以第二个元素的索引是1
 
     assert_eq!(2, second,
         "This is not the 2nd number in the tuple!")
